@@ -328,7 +328,7 @@ if __name__ == "__main__":
     parser.add_argument('--threaded', type=bool, default= False, help='Use multi-threading to convert labelme json files')
     args = parser.parse_args()
     
-    root_dir =  "/Users/yifanyang/Projects/ppq/detection/figures/" 
+    root_dir =  "./figures/" 
 
     labelme_dir = args.labelme_json_dir if args.labelme_json_dir != '' else root_dir + 'fig201-400/201-400json/' 
     image_save_dir =  args.image_save_dir if args.image_save_dir != '' else root_dir + 'fig201-400/201-400fig/'
