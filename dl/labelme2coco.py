@@ -37,12 +37,24 @@ class LabelMeToCOCOConverter:
         self.save_coco_json()
 
     # Update the LabelMeToCOCOConverter class to include convert_single_file method
+    # !!! Important Assumptiopns:
+    # we abandon the threading lock and use the json file name as the image ID,
+    # DO notice that, we assume the json file unames are unique
     def convert_single_file(self, labelme_json_path):
+        # Use file name without the extension as the image_id
+        file_name_without_extension = os.path.splitext(os.path.basename(labelme_json_path))[0]
+        # If you are sure that the file name can be an integer, convert it.
+        try:
+            self.image_id = int(file_name_without_extension)
+        except ValueError:
+            # If the file name is not an integer, use a hash to ensure a unique identifier
+            self.image_id = hash(file_name_without_extension)
+        
         self.load_labelme_json(labelme_json_path)
         file_name, image_size = self.decode_and_save_base64_image(file_name=labelme_json_path)
         self.add_image_info(file_name, image_size)
         self.add_annotations()
-        self.image_id += 1  # Increment image ID for the next file
+        # No need to increment self.image_id since it is now unique per file
 
     def load_labelme_json(self, json_path):
         with open(json_path, 'r') as file:
